@@ -10,38 +10,52 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Mutex implements Runnable {
     private ArrayList<WordWithLine> section;
+    private ArrayList<WordWithLine> history;
     private int id;
-    private String search;
+    private String[] search;
     private ReentrantLock mutex;
+    private PrintWriter myWriter;
 
-    public Mutex(int id, ArrayList<WordWithLine> section, String search, ReentrantLock mutex) {
+    public Mutex(int id, ArrayList<WordWithLine> section, String[] search, ReentrantLock mutex, PrintWriter myWriter,
+            ArrayList<WordWithLine> history) {
         this.section = section;
         this.id = id;
-        this.search = search.toLowerCase();
+        this.search = search;
         this.mutex = mutex;
+        this.myWriter = myWriter;
+        this.history = history;
     }
 
     @Override
     public void run() {
-        try (PrintWriter myWriter = new PrintWriter("output.txt", "UTF-8")) {
-            for (int i = 0; i < section.size(); i++) {
-                LocalTime time = java.time.LocalTime.now();
-                if (section.get(i).getWord().equals(search)) {
-                    mutex.lock();
-                    try {
-                        myWriter.println("line = " + section.get(i).getLine() + " nThread = " +
-                                this.id +
-                                " Time of find word : " + time + " Time of write in file : "
-                                + java.time.LocalTime.now());
-                    } finally {
-                        mutex.unlock();
-                    }
 
+        for (int i = 0; i < section.size(); i++) {
+            LocalTime time = java.time.LocalTime.now();
+            if (check(section.get(i).getWord())) {
+                mutex.lock();
+                try {
+                    history.add(section.get(i));
+                    myWriter.println("word : " + section.get(i).getWord() + " line = " + section.get(i).getLine()
+                            + " nThread = " +
+                            this.id +
+                            " Time of find word : " + time + " Time of write in file : "
+                            + java.time.LocalTime.now());
+                } finally {
+                    mutex.unlock();
                 }
+
             }
-            myWriter.close();
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
         }
+
+    }
+
+    private boolean check(String word) {
+        for (int i = 0; i < search.length; i++) {
+            if (word.equals(search[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

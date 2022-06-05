@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,10 +16,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         String input = new String();
+        String inputWord = new String();
 
-        input = readFile();
+        input = readFile("./input2.txt");
+        inputWord = readFile("./inputWord2.txt");
+        String[] words = inputWord.split("\\s+");
 
         ArrayList<WordWithLine>[] sections = new ArrayList[numberOfSection];
+        ArrayList<WordWithLine> history = new ArrayList<WordWithLine>();
         for (int i = 0; i < numberOfSection; i++) {
             sections[i] = new ArrayList<WordWithLine>();
         }
@@ -32,12 +37,16 @@ public class Main {
             output.createNewFile();
         } catch (IOException e) {
         }
+        PrintWriter myWriter = new PrintWriter("output.txt", "UTF-8");
 
         for (int i = 0; i < numberOfThread; i++) {
-            excecutor.submit(new Mutex(i, sections[i], "The", mutex));
+            excecutor.submit(new Mutex(i, sections[i], words, mutex, myWriter, history));
         }
 
         excecutor.shutdown();
+        excecutor.awaitTermination(1, TimeUnit.DAYS);
+        myWriter.close();
+
     }
 
     public static void devideData(String input, int section, ArrayList<WordWithLine>[] sections) {
@@ -62,8 +71,8 @@ public class Main {
         }
     }
 
-    public static String readFile() throws IOException {
-        Path fileName = Path.of("./input.txt");
+    public static String readFile(String path) throws IOException {
+        Path fileName = Path.of(path);
         return Files.readString(fileName);
     }
 
