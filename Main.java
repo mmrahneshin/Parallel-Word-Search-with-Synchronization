@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -33,6 +35,7 @@ public class Main {
         ExecutorService excecutor = Executors.newFixedThreadPool(numberOfThread);
 
         File output = new File("output.txt");
+
         try {
             output.createNewFile();
         } catch (IOException e) {
@@ -40,7 +43,7 @@ public class Main {
         PrintWriter myWriter = new PrintWriter("output.txt", "UTF-8");
 
         for (int i = 0; i < numberOfThread; i++) {
-            excecutor.submit(new Mutex(i, sections[i], words, mutex, myWriter, history));
+            excecutor.submit(new Mutex(i, sections[i], words, mutex, myWriter, history, output));
         }
 
         excecutor.shutdown();

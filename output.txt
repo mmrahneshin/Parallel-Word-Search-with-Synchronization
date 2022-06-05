@@ -1,9 +1,4 @@
-word : with line = 3 nThread = 2 Time of find word : 21:01:37.054366700 Time of write in file : 21:01:37.054366700
-word : eight line = 4 nThread = 2 Time of find word : 21:01:37.055370100 Time of write in file : 21:01:37.055370100
-word : two line = 4 nThread = 2 Time of find word : 21:01:37.055370100 Time of write in file : 21:01:37.055370100
-word : ten line = 1 nThread = 0 Time of find word : 21:01:37.054366700 Time of write in file : 21:01:37.055370100
-word : eight line = 6 nThread = 3 Time of find word : 21:01:37.054366700 Time of write in file : 21:01:37.055370100
-word : two line = 3 nThread = 1 Time of find word : 21:01:37.054366700 Time of write in file : 21:01:37.055370100
-word : ten line = 4 nThread = 2 Time of find word : 21:01:37.055370100 Time of write in file : 21:01:37.055370100
-word : with line = 1 nThread = 0 Time of find word : 21:01:37.055370100 Time of write in file : 21:01:37.055370100
-word : two line = 1 nThread = 0 Time of find word : 21:01:37.055370100 Time of write in file : 21:01:37.055370100
+word : with line = 3 nThread = 2 Time of find word : 22:34:49.931943300 Time of write in file : 22:34:49.931943300
+word : eight line = 4 nThread = 2 Time of find word : 22:34:49.931943300 Time of write in file : 22:34:49.931943300
+word : two line = 3 nThread = 1 Time of find word : 22:34:49.931943300 Time of write in file : 22:34:49.931943300
+word : ten line = 1 nThread = 0 Time of find word : 22:34:49.931943300 Time of write in file : 22:34:49.932944100
