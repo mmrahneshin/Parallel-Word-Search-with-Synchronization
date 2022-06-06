@@ -1,5 +1,10 @@
 
-word : ten line = 1 nThread = 0 Time of find word : 19:14:01.079629900 Time of write in file : 19:14:01.096629600
-word : eight line = 4 nThread = 2 Time of find word : 19:14:01.091630300 Time of write in file : 19:14:01.107631500
-word : with line = 1 nThread = 0 Time of find word : 19:14:01.097633 Time of write in file : 19:14:01.118630500
-word : two line = 1 nThread = 0 Time of find word : 19:14:01.118630500 Time of write in file : 19:14:01.129633100
+word : alex line = 18 nThread = 0 Time of find word : 22:56:02.653511900 Time of write in file : 22:56:02.678542800
+word : rich line = 20 nThread = 0 Time of find word : 22:56:02.679604100 Time of write in file : 22:56:02.687636300
+word : empty line = 63 nThread = 0 Time of find word : 22:56:02.692168600 Time of write in file : 22:56:02.698167300
+word : elyssia line = 895 nThread = 2 Time of find word : 22:56:02.708167400 Time of write in file : 22:56:02.722167400
+word : stood line = 492 nThread = 1 Time of find word : 22:56:02.723166400 Time of write in file : 22:56:02.735247100
+word : because line = 184 nThread = 0 Time of find word : 22:56:02.715550800 Time of write in file : 22:56:02.749565100
+word : kill line = 200 nThread = 0 Time of find word : 22:56:02.750169600 Time of write in file : 22:56:02.753169100
+word : put line = 971 nThread = 2 Time of find word : 22:56:02.754168300 Time of write in file : 22:56:02.767229600
+word : needs line = 1883 nThread = 4 Time of find word : 22:56:02.769089100 Time of write in file : 22:56:02.774088500

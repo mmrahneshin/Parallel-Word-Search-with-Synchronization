@@ -1,65 +1,43 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 
-public class Mutex implements Runnable {
+public class Processing {
     private ArrayList<WordWithLine> section;
     private ArrayList<WordWithLine> history;
-    private int id;
     private String[] search;
-    private ReentrantLock mutex;
     private File output;
 
-    public Mutex(int id, ArrayList<WordWithLine> section, String[] search, ReentrantLock mutex,
+    public Processing(ArrayList<WordWithLine> sections, String[] search,
             ArrayList<WordWithLine> history, File output) {
-        this.section = section;
-        this.id = id;
+        this.section = sections;
         this.search = search;
-        this.mutex = mutex;
         this.history = history;
         this.output = output;
     }
 
-    @Override
-    public void run() {
-
+    public void process() throws IOException {
         for (int i = 0; i < section.size(); i++) {
             LocalTime time = java.time.LocalTime.now();
             if (check(section.get(i).getWord())) {
-                mutex.lock();
-                try {
-                    int index = checkHistory(section.get(i));
-                    if (index != -1) {
-                        if (index != -2) {
-                            replaceInOutput(index, section.get(i));
-                            history.remove(index);
-                            history.add(section.get(i));
-                            writeToFile(index, section.get(i), time);
-                        }
-                    } else {
+                int index = checkHistory(section.get(i));
+                if (index != -1) {
+                    if (index != -2) {
+                        replaceInOutput(index, section.get(i));
+                        history.remove(index);
                         history.add(section.get(i));
                         writeToFile(index, section.get(i), time);
                     }
-                } catch (IOException e) {
-                } finally {
-                    mutex.unlock();
+                } else {
+                    history.add(section.get(i));
+                    writeToFile(index, section.get(i), time);
                 }
 
             }
         }
-
     }
 
     private void writeToFile(int index, WordWithLine obj, LocalTime time) throws IOException {
@@ -76,8 +54,7 @@ public class Mutex implements Runnable {
             myWriter.println(lines[i]);
         }
         myWriter.println("word : " + obj.getWord() + " line = " + obj.getLine()
-                + " nThread = " +
-                this.id +
+                + " Process" +
                 " Time of find word : " + time + " Time of write in file : "
                 + java.time.LocalTime.now());
         myWriter.close();
@@ -104,6 +81,15 @@ public class Mutex implements Runnable {
         myWriter.close();
     }
 
+    private boolean check(String word) {
+        for (int i = 0; i < search.length; i++) {
+            if (word.equals(search[i].toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private int checkHistory(WordWithLine obj) {
         for (int i = 0; i < history.size(); i++) {
             if (history.get(i).getWord().equals(obj.getWord())) {
@@ -116,14 +102,4 @@ public class Mutex implements Runnable {
         }
         return -1;
     }
-
-    private boolean check(String word) {
-        for (int i = 0; i < search.length; i++) {
-            if (word.equals(search[i].toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

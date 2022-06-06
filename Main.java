@@ -1,8 +1,5 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,15 +10,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-    private static int numberOfSection = 4;
-    private static int numberOfThread = 4;
+    private static int numberOfSection = 6;
+    private static int numberOfThread = 6;
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        long startTime = System.nanoTime();
+
         String input = new String();
         String inputWord = new String();
 
-        input = readFile("./input2.txt");
-        inputWord = readFile("./inputWord2.txt");
+        input = readFile("./input.txt");
+        inputWord = readFile("./inputWord.txt");
         String[] words = inputWord.split("\\s+");
 
         ArrayList<WordWithLine>[] sections = new ArrayList[numberOfSection];
@@ -54,7 +53,8 @@ public class Main {
         Semaphore sem = new Semaphore(1);
 
         for (int i = 0; i < numberOfThread; i++) {
-            excecutor.submit(new ProcessWithSemaphore(i, sections[i], words, sem, history, output));
+            excecutor.submit(new ProcessWithSemaphore(i, sections[i], words, sem,
+                    history, output));
         }
         // process with semaphore
         // --------------------------------------------------------------
@@ -62,6 +62,18 @@ public class Main {
         excecutor.shutdown();
         excecutor.awaitTermination(1, TimeUnit.DAYS);
 
+        // simple process
+        // --------------------------------------------------------------
+        // Processing p = new Processing(sections[0], words, history, output);
+
+        // p.process();
+        // simple process
+        // --------------------------------------------------------------
+
+        long endTime = System.nanoTime();
+        long totalTime = endTime - startTime;
+
+        System.out.println(totalTime);
     }
 
     public static void devideData(String input, int section, ArrayList<WordWithLine>[] sections) {

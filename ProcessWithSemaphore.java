@@ -114,7 +114,7 @@ public class ProcessWithSemaphore implements Runnable {
 
     private boolean check(String word) {
         for (int i = 0; i < search.length; i++) {
-            if (word.equals(search[i])) {
+            if (word.equals(search[i].toLowerCase())) {
                 return true;
             }
         }
