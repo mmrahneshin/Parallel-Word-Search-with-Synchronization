@@ -1,33 +1,26 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
-public class Mutex implements Runnable {
+public class ProcessWithSemaphore implements Runnable {
     private ArrayList<WordWithLine> section;
     private ArrayList<WordWithLine> history;
     private int id;
     private String[] search;
-    private ReentrantLock mutex;
+    private Semaphore sem;
     private File output;
 
-    public Mutex(int id, ArrayList<WordWithLine> section, String[] search, ReentrantLock mutex,
+    public ProcessWithSemaphore(int id, ArrayList<WordWithLine> section, String[] search,
+            Semaphore sem,
             ArrayList<WordWithLine> history, File output) {
         this.section = section;
         this.id = id;
         this.search = search;
-        this.mutex = mutex;
+        this.sem = sem;
         this.history = history;
         this.output = output;
     }
@@ -38,7 +31,10 @@ public class Mutex implements Runnable {
         for (int i = 0; i < section.size(); i++) {
             LocalTime time = java.time.LocalTime.now();
             if (check(section.get(i).getWord())) {
-                mutex.lock();
+                try {
+                    sem.acquire();
+                } catch (InterruptedException e1) {
+                }
                 try {
                     int index = checkHistory(section.get(i));
                     if (index != -1) {
@@ -54,9 +50,8 @@ public class Mutex implements Runnable {
                     }
                 } catch (IOException e) {
                 } finally {
-                    mutex.unlock();
+                    sem.release();
                 }
-
             }
         }
 

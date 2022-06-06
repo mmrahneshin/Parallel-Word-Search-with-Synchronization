@@ -8,13 +8,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     private static int numberOfSection = 4;
     private static int numberOfThread = 4;
-    private static ReentrantLock mutex = new ReentrantLock();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         String input = new String();
@@ -35,20 +35,32 @@ public class Main {
         ExecutorService excecutor = Executors.newFixedThreadPool(numberOfThread);
 
         File output = new File("output.txt");
-
-        try {
+        if (!output.createNewFile()) {
+            output.delete();
             output.createNewFile();
-        } catch (IOException e) {
         }
-        PrintWriter myWriter = new PrintWriter("output.txt", "UTF-8");
+        // process with mutex
+        // --------------------------------------------------------------
+        // ReentrantLock mutex = new ReentrantLock();
+
+        // for (int i = 0; i < numberOfThread; i++) {
+        // excecutor.submit(new Mutex(i, sections[i], words, mutex, history, output));
+        // }
+        // process with mutex
+        // --------------------------------------------------------------
+
+        // process with semaphore
+        // --------------------------------------------------------------
+        Semaphore sem = new Semaphore(1);
 
         for (int i = 0; i < numberOfThread; i++) {
-            excecutor.submit(new Mutex(i, sections[i], words, mutex, myWriter, history, output));
+            excecutor.submit(new ProcessWithSemaphore(i, sections[i], words, sem, history, output));
         }
+        // process with semaphore
+        // --------------------------------------------------------------
 
         excecutor.shutdown();
         excecutor.awaitTermination(1, TimeUnit.DAYS);
-        myWriter.close();
 
     }
 
